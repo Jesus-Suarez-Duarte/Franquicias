@@ -1,4 +1,5 @@
 # Franquicias
+
 Para mas informacion puede descargar manual en 
 https://1drv.ms/w/c/cc99654aeb02a925/ESJEwUGnVeNHg1lYuOKP0isB1reGXB4MamRloOTJGLPGfQ?e=qbKkuO
 
@@ -9,7 +10,7 @@ Está implementado en Java 21 utilizando Spring Boot 3.4.4 y cuenta con los sigu
 Persistencia de Datos:
 Utiliza JPA y la dependencia de MySQL (versión 9.2.0) para el almacenamiento persistente. Además,
 se incluye H2 Database para propósitos de prueba y desarrollo el perfil se puede cambiar en el properties.
-spring.profiles.active=prod se cambia a spring.profiles.active=desarrollo
+spring.profiles.active=desarrollo se cambia a spring.profiles.active=prod
 
 Dependencias y Utilidades:
 Incluye Spring Web para la creación de endpoints, Spring Devtools para facilitar el desarrollo y Lombok para simplificar el código eliminando código repetitivo,
