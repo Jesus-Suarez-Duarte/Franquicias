@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.franquici.franqui.Dto.SucursalDTO;
 import com.franquici.franqui.Dto.SucursalRequestDTO;
+import com.franquici.franqui.Dto.SucursalUpdateDTO;
 import com.franquici.franqui.exception.ResourceAlreadyExistsException;
 import com.franquici.franqui.exception.ResourceNotFoundException;
 import com.franquici.franqui.mapper.SucursalMapper;
@@ -66,19 +67,37 @@ public class SucursalService {
      return sucursalMapper.toDTO(sucursal);
  }
  
+	/*
+	 * @Transactional public SucursalDTO updateSucursal(Long id, SucursalRequestDTO
+	 * sucursalDTO) { Sucursal sucursal = sucursalRepository.findById(id)
+	 * .orElseThrow(() -> new
+	 * ResourceNotFoundException("Sucursal no encontrada con id: " + id));
+	 * 
+	 * // Solo verificamos duplicados si el nombre cambió if
+	 * (!sucursal.getNombre().equals(sucursalDTO.getNombre()) &&
+	 * sucursalRepository.existsByNombreAndFranquiciaId(sucursalDTO.getNombre(),
+	 * sucursal.getFranquicia().getId())) { throw new
+	 * ResourceAlreadyExistsException("Ya existe una sucursal con el nombre: " +
+	 * sucursalDTO.getNombre() + " para esta franquicia"); }
+	 * 
+	 * sucursalMapper.updateEntity(sucursal, sucursalDTO); sucursal =
+	 * sucursalRepository.save(sucursal); return sucursalMapper.toDTO(sucursal); }
+	 */
+ 
  @Transactional
- public SucursalDTO updateSucursal(Long id, SucursalRequestDTO sucursalDTO) {
-     Sucursal sucursal = sucursalRepository.findById(id)
-         .orElseThrow(() -> new ResourceNotFoundException("Sucursal no encontrada con id: " + id));
+ public SucursalDTO updateSucursalNombre(SucursalUpdateDTO sucursalUpdateDTO) {
+     Sucursal sucursal = sucursalRepository.findById(sucursalUpdateDTO.getId())
+         .orElseThrow(() -> new ResourceNotFoundException("Sucursal no encontrada con id: " + sucursalUpdateDTO.getId()));
      
      // Solo verificamos duplicados si el nombre cambió
-     if (!sucursal.getNombre().equals(sucursalDTO.getNombre()) && 
-         sucursalRepository.existsByNombreAndFranquiciaId(sucursalDTO.getNombre(), sucursal.getFranquicia().getId())) {
-         throw new ResourceAlreadyExistsException("Ya existe una sucursal con el nombre: " + sucursalDTO.getNombre() + 
-                                                 " para esta franquicia");
+     if (!sucursal.getNombre().equals(sucursalUpdateDTO.getNombre()) && 
+         sucursalRepository.existsByNombreAndFranquiciaId(sucursalUpdateDTO.getNombre(), sucursal.getFranquicia().getId())) {
+         throw new ResourceAlreadyExistsException("Ya existe una sucursal con el nombre: " + sucursalUpdateDTO.getNombre() + 
+                                               " para esta franquicia");
      }
      
-     sucursalMapper.updateEntity(sucursal, sucursalDTO);
+     // Actualizamos solo el nombre
+     sucursal.setNombre(sucursalUpdateDTO.getNombre());
      sucursal = sucursalRepository.save(sucursal);
      return sucursalMapper.toDTO(sucursal);
  }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.franquici.franqui.Dto.ProductoDTO;
 import com.franquici.franqui.Dto.ProductoRequestDTO;
+import com.franquici.franqui.Dto.ProductoUpdateDTO;
 import com.franquici.franqui.Dto.StockUpdateRequestDTO;
 import com.franquici.franqui.exception.ResourceAlreadyExistsException;
 import com.franquici.franqui.exception.ResourceNotFoundException;
@@ -84,7 +85,23 @@ public class ProductoService {
      producto = productoRepository.save(producto);
      return productoMapper.toDTO(producto);
  }
- 
+ @Transactional
+ public ProductoDTO updateProductoNombre(ProductoUpdateDTO productoUpdateDTO) {
+     Producto producto = productoRepository.findById(productoUpdateDTO.getId())
+         .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con id: " + productoUpdateDTO.getId()));
+     
+     // Solo verificamos duplicados si el nombre cambió
+     if (!producto.getNombre().equals(productoUpdateDTO.getNombre()) && 
+         productoRepository.existsByNombreAndSucursalId(productoUpdateDTO.getNombre(), producto.getSucursal().getId())) {
+         throw new ResourceAlreadyExistsException("Ya existe un producto con el nombre: " + productoUpdateDTO.getNombre() + 
+                                               " para esta sucursal");
+     }
+     
+     // Actualizamos solo el nombre
+     producto.setNombre(productoUpdateDTO.getNombre());
+     producto = productoRepository.save(producto);
+     return productoMapper.toDTO(producto);
+ }
  @Transactional
  public ProductoDTO updateProductoStock(Long id, StockUpdateRequestDTO stockDTO) {
      Producto producto = productoRepository.findById(id)
