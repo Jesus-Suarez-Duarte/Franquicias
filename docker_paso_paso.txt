@@ -1,0 +1,7 @@
+En Spring Tool Suite, haz clic derecho en tu proyecto
+1)Maven > Clean
+2)Luego Maven > Install (esto generará el archivo JAR)
+3)viajar al directorio 
+4)docker build -t franqui-app .
+--subir imagen al docker e inicializarla 
+5)docker run -p 8082:8082 --name franqui-container franqui-app
